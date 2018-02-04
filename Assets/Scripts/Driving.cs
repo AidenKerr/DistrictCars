@@ -42,7 +42,8 @@ public class Driving : MonoBehaviour {
 		float motor = Input.GetAxis("Vertical") * maxTorque;
 		// Apply the exponentially decreasing turning angle
 		// The ternary operator is to limit it at 90% of it's decrease so it never reaches 0 turning angle
-		float a = (speed > 0.9f * maxWheelTurnVelocity) ? maxTurn - Mathf.Pow(velocityBase, 0.9f * maxWheelTurnVelocity) : maxTurn - Mathf.Pow(velocityBase, speed);
+		float angleCutoff = 0.98f;
+		float a = (speed > angleCutoff * maxWheelTurnVelocity) ? maxTurn - Mathf.Pow(velocityBase, angleCutoff * maxWheelTurnVelocity) : maxTurn - Mathf.Pow(velocityBase, speed);
 		float steering = Input.GetAxis("Horizontal") * a;
 
 		// apply motor and steering values when needed
