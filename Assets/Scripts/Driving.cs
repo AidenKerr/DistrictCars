@@ -7,6 +7,7 @@ public class Driving : MonoBehaviour {
 	public Rigidbody rb; // rigidbody for velocity purposes
 	public List<AxleInfo> axleInfos;
 	public float maxTorque;
+	public float maxBrakeTorque;
 	public float maxTurn;
 	public float maxWheelTurnVelocity; // velocity at which wheel turning becomes minimal;
 
@@ -36,7 +37,6 @@ public class Driving : MonoBehaviour {
 	void FixedUpdate() {
 
 		float speed = rb.velocity.magnitude;
-		print("velocity = " + speed);
 
 		// set motor and steering values
 		float motor = Input.GetAxis("Vertical") * maxTorque;
@@ -49,6 +49,13 @@ public class Driving : MonoBehaviour {
 		// apply motor and steering values when needed
 		foreach (AxleInfo axleInfo in axleInfos) {
 
+			if (Input.GetAxis("Brake") > 0) {
+				axleInfo.leftWheel.brakeTorque = maxBrakeTorque;
+				axleInfo.rightWheel.brakeTorque = maxBrakeTorque;
+			} else {
+				axleInfo.leftWheel.brakeTorque = 0;
+				axleInfo.rightWheel.brakeTorque = 0;
+			}
 			if (axleInfo.motor) {
 				axleInfo.leftWheel.motorTorque = motor;
 				axleInfo.rightWheel.motorTorque = motor;
