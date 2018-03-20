@@ -7,19 +7,19 @@ public class GameController : MonoBehaviour {
 
 	public Text winText;
 	public Text countText;
-	public Button restartButton;
+	public Canvas EscapeCanvas;
 
 	private int coins;
 	private int count;
+	private bool open; // is the escape menu open?
 
 	// Use this for initialization
 	void Start () {
-		// restart button should not be visible
-		restartButton.gameObject.SetActive(false);
-
 		// set up coin counter
 		coins = GameObject.FindGameObjectsWithTag("Coin").Length;
 		countText.text = count.ToString() + "/" + coins.ToString();
+
+		open = false;
 	}
 		
 	void OnTriggerEnter(Collider other) {
@@ -40,7 +40,8 @@ public class GameController : MonoBehaviour {
 		if (win) {
 			winText.text = "You Win!";
 		} else {
-			restartButton.gameObject.SetActive(true);
+			EscapeCanvas.gameObject.SetActive(true);
+			open = true;
 		}
 	}
 
@@ -49,6 +50,18 @@ public class GameController : MonoBehaviour {
 		countText.text = count.ToString() + "/" + coins.ToString();
 		if (count >= coins) {
 			GameOver(true);
+		}
+	}
+
+	public void Update() {
+		if (Input.GetButtonDown("Cancel")) {
+			if (open) {
+				EscapeCanvas.gameObject.SetActive(false);
+				open = false;
+			} else {
+				EscapeCanvas.gameObject.SetActive(true);
+				open = true;
+			}
 		}
 	}
 }
