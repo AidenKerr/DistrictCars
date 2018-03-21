@@ -10,6 +10,7 @@ public class Driving : MonoBehaviour {
 	public float maxBrakeTorque;
 	public float maxTurn;
 	public float maxWheelTurnVelocity; // velocity at which wheel turning becomes minimal;
+	public bool canBrake;
 
 	private float velocityBase;
 
@@ -49,7 +50,7 @@ public class Driving : MonoBehaviour {
 		// apply motor and steering values when needed
 		foreach (AxleInfo axleInfo in axleInfos) {
 
-			if (Input.GetAxis("Brake") > 0) {
+			if (Input.GetAxis("Brake") > 0 && canBrake) {
 				axleInfo.leftWheel.brakeTorque = maxBrakeTorque;
 				axleInfo.rightWheel.brakeTorque = maxBrakeTorque;
 			} else {
