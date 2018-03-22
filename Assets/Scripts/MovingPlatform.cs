@@ -12,7 +12,7 @@ public class MovingPlatform : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		platform.transform.Translate(0, 0, -1);
-		if (Time.time > nextTime) {
+		if (Time.timeSinceLevelLoad > nextTime) {
 			nextTime += period;
 			platform.transform.position = new Vector3(0, -25, 65);
 		}
