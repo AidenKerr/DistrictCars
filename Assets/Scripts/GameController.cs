@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
-	public Text winText;
+	public Canvas winScreen;
 	public Text countText;
 	public Canvas EscapeCanvas;
 
@@ -19,6 +19,7 @@ public class GameController : MonoBehaviour {
 		coins = GameObject.FindGameObjectsWithTag("Coin").Length;
 		countText.text = count.ToString() + "/" + coins.ToString();
 
+		winScreen.gameObject.SetActive(false);
 		open = false;
 	}
 		
@@ -36,10 +37,13 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
+	// arg "win" true  -> win
+	// arg "win" false -> lose
 	void GameOver (bool win) {
 		if (win) {
-			winText.text = "You Win!";
-		} else {
+			EscapeCanvas.gameObject.SetActive(false);
+			winScreen.gameObject.SetActive(true);
+		} else if(!winScreen.gameObject.activeSelf) {
 			EscapeCanvas.gameObject.SetActive(true);
 			open = true;
 		}
@@ -58,7 +62,7 @@ public class GameController : MonoBehaviour {
 			if (open) {
 				EscapeCanvas.gameObject.SetActive(false);
 				open = false;
-			} else {
+			} else if (!winScreen.gameObject.activeSelf) {
 				EscapeCanvas.gameObject.SetActive(true);
 				open = true;
 			}
