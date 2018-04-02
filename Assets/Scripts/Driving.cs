@@ -11,12 +11,15 @@ public class Driving : MonoBehaviour {
 	public float maxTurn;
 	public float maxWheelTurnVelocity; // velocity at which wheel turning becomes minimal;
 	public bool canBrake;
+	public AudioSource sound;
+	public float maxPitch;
 
 	private float velocityBase;
 
 	void Start() {
 		rb = GetComponent<Rigidbody>();
 		velocityBase = Mathf.Pow(10, Mathf.Log10(maxTurn) / maxWheelTurnVelocity);
+		sound = GetComponent<AudioSource>();
 	}
 
 	public void ApplyVisuals(WheelCollider collider) {
@@ -41,6 +44,13 @@ public class Driving : MonoBehaviour {
 
 		// set motor and steering values
 		float motor = Input.GetAxis("Vertical") * maxTorque;
+		// set motor sound pitch
+		float inc = 0.01f;
+		if (Input.GetAxis("Vertical") != 0 && sound.pitch < maxPitch) {
+			sound.pitch += inc;
+		} else if (sound.pitch != 1) {
+			sound.pitch -= inc;
+		}
 		// Apply the exponentially decreasing turning angle
 		// The ternary operator is to limit it at 90% of it's decrease so it never reaches 0 turning angle
 		float angleCutoff = 0.98f;
