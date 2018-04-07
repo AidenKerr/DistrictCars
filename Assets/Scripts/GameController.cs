@@ -8,8 +8,10 @@ public class GameController : MonoBehaviour {
 	public Canvas winScreen;
 	public Text countText;
 	public Canvas EscapeCanvas;
+	public GameObject debrisPrefab;
 
 	private int coins;
+	private int destroyables;
 	private int count;
 	private bool open; // is the escape menu open?
 
@@ -18,6 +20,10 @@ public class GameController : MonoBehaviour {
 		// set up coin counter
 		coins = GameObject.FindGameObjectsWithTag("Coin").Length;
 		countText.text = count.ToString() + "/" + coins.ToString();
+
+		// same as above - levels can only have coins or destroyables - this overrides coins
+		destroyables = GameObject.FindGameObjectsWithTag("Destroyable").Length;
+		countText.text = count.ToString() + "/" + destroyables.ToString();
 
 		winScreen.gameObject.SetActive(false);
 		open = false;
@@ -34,6 +40,15 @@ public class GameController : MonoBehaviour {
 			case "Ground":
 				GameOver(false);
 				break;
+		}
+	}
+
+	void OnCollisionEnter(Collision collision) {
+		if (collision.collider.gameObject.tag == "Destroyable" && collision.relativeVelocity.magnitude > 17f) {
+			count++;
+			SetCountText();
+			collision.collider.gameObject.SetActive(false);
+			Instantiate(debrisPrefab, collision.collider.transform.position, collision.collider.transform.rotation);
 		}
 	}
 
