@@ -21,9 +21,11 @@ public class GameController : MonoBehaviour {
 		coins = GameObject.FindGameObjectsWithTag("Coin").Length;
 		countText.text = count.ToString() + "/" + coins.ToString();
 
-		// same as above - levels can only have coins or destroyables - this overrides coins
+		// same as above - levels can only have coins or destroyables
 		destroyables = GameObject.FindGameObjectsWithTag("Destroyable").Length;
-		countText.text = count.ToString() + "/" + destroyables.ToString();
+		if (destroyables != 0) {
+			countText.text = count.ToString() + "/" + destroyables.ToString();
+		}
 
 		winScreen.gameObject.SetActive(false);
 		open = false;
