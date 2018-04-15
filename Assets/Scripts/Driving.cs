@@ -46,14 +46,13 @@ public class Driving : MonoBehaviour {
 
 		// set motor and steering values
 		float motor = 0;
-		float dotProd = Vector3.Dot(rb.velocity, rb.transform.forward);
-		print(Mathf.Sign(AxisVert) != Mathf.Sign(dotProd));
+		float dotProd = Vector3.Dot(rb.velocity, rb.transform.forward); // for the sole purpose of acquiring a pos/neg value of velocity in a non-Vector3 type
+		// if desired direction is opposite moving direction
 		if (Mathf.Sign(AxisVert) != Mathf.Sign(dotProd)) {
 			brake = 1;
 		} else {
 			motor = AxisVert * maxTorque;
 		}
-		print(brake);
 
 
 		// set motor sound pitch
