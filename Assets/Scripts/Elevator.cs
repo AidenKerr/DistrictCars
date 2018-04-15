@@ -9,6 +9,6 @@ public class Elevator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.Translate(Vector3.up * Mathf.Sin(Time.timeSinceLevelLoad * freq) * amp);
+		transform.Translate(Vector3.up * Mathf.Sin(Time.timeSinceLevelLoad * freq) * amp * Time.deltaTime);
 	}
 }
