@@ -41,18 +41,31 @@ public class Driving : MonoBehaviour {
 	void FixedUpdate() {
 
 		float speed = rb.velocity.magnitude;
+		float AxisVert = Input.GetAxis("Vertical");
+		float brake = Input.GetAxis("Brake");
 
 		// set motor and steering values
-		float motor = Input.GetAxis("Vertical") * maxTorque;
+		float motor = 0;
+		float dotProd = Vector3.Dot(rb.velocity, rb.transform.forward);
+		print(Mathf.Sign(AxisVert) != Mathf.Sign(dotProd));
+		if (Mathf.Sign(AxisVert) != Mathf.Sign(dotProd)) {
+			brake = 1;
+		} else {
+			motor = AxisVert * maxTorque;
+		}
+		print(brake);
+
+
 		// set motor sound pitch
 		float inc = 0.01f;
-		if (Input.GetAxis("Vertical") != 0 && sound.pitch < maxPitch) {
+		if (AxisVert != 0 && sound.pitch < maxPitch) {
 			sound.pitch += inc;
 		} else if (sound.pitch != 1) {
 			sound.pitch -= inc;
 		}
+
 		// Apply the exponentially decreasing turning angle
-		// The ternary operator is to limit it at 90% of it's decrease so it never reaches 0 turning angle
+		// The ternary operator is to limit it at x% of it's decrease so it never reaches 0 turning angle
 		float angleCutoff = 0.98f;
 		float a = (speed > angleCutoff * maxWheelTurnVelocity) ? maxTurn - Mathf.Pow(velocityBase, angleCutoff * maxWheelTurnVelocity) : maxTurn - Mathf.Pow(velocityBase, speed);
 		float steering = Input.GetAxis("Horizontal") * a;
@@ -60,7 +73,7 @@ public class Driving : MonoBehaviour {
 		// apply motor and steering values when needed
 		foreach (AxleInfo axleInfo in axleInfos) {
 
-			if (Input.GetAxis("Brake") > 0 && canBrake) {
+			if (brake > 0 && canBrake) {
 				axleInfo.leftWheel.brakeTorque = maxBrakeTorque;
 				axleInfo.rightWheel.brakeTorque = maxBrakeTorque;
 			} else {
