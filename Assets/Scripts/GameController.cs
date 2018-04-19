@@ -10,22 +10,25 @@ public class GameController : MonoBehaviour {
 	public Canvas EscapeCanvas;
 	public GameObject debrisPrefab;
 
-	private int coins;
 	private int destroyables;
 	private int count;
 	private bool open; // is the escape menu open?
+	private int total;
 
 	// Use this for initialization
 	void Start () {
+		
 		// set up coin counter
-		coins = GameObject.FindGameObjectsWithTag("Coin").Length;
-		countText.text = count.ToString() + "/" + coins.ToString();
+		total = GameObject.FindGameObjectsWithTag("Coin").Length;
 
-		// same as above - levels can only have coins or destroyables
+		// replace coin counter with destroyables if destroyables exist.
 		destroyables = GameObject.FindGameObjectsWithTag("Destroyable").Length;
 		if (destroyables != 0) {
-			countText.text = count.ToString() + "/" + destroyables.ToString();
+			total = destroyables;
 		}
+
+		// set count text (ie "2/3" - coins collected)
+		countText.text = count.ToString() + "/" + total.ToString();
 
 		winScreen.gameObject.SetActive(false);
 		open = false;
@@ -47,9 +50,9 @@ public class GameController : MonoBehaviour {
 
 	void OnCollisionEnter(Collision collision) {
 		if (collision.collider.gameObject.tag == "Destroyable" && collision.relativeVelocity.magnitude > 17f) {
+			collision.collider.gameObject.SetActive(false);
 			count++;
 			SetCountText();
-			collision.collider.gameObject.SetActive(false);
 			Instantiate(debrisPrefab, collision.collider.transform.position, collision.collider.transform.rotation);
 		}
 	}
@@ -68,8 +71,8 @@ public class GameController : MonoBehaviour {
 
 	// set the text of the coin counter
 	void SetCountText() {
-		countText.text = count.ToString() + "/" + coins.ToString();
-		if (count >= coins) {
+		countText.text = count.ToString() + "/" + total.ToString();
+		if (count >= total) {
 			GameOver(true);
 		}
 	}
